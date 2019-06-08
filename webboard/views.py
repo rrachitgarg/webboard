@@ -1,6 +1,7 @@
 from django.shortcuts import render,get_object_or_404,redirect
 from django.http import HttpResponse
 from django.contrib.auth.decorators import login_required
+from django.utils import timezone
 
 
 from .models import Board,Post,Topic,User
@@ -49,6 +50,8 @@ def posts_reply(request,pk,topic_pk):
             post.topic=topic
             post.created_by=request.user
             post.save()
+            topic.last_updated = timezone.now()
+            topic.save() 
             return redirect('topic_posts', pk=pk, topic_pk=topic_pk)
     else:
         form=PostsReplyForm()
